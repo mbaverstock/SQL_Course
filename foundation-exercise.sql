@@ -5,31 +5,72 @@ Use the table PatientStay.
 This lists 44 patients admitted to London hospitals over 5 days between Feb 26th and March 2nd 2024
 */
 
+-- SELECT
+-- 	ps.PatientId
+-- 	, ps.AdmittedDate
+-- 	, ps.DischargeDate
+-- 	, DATEADD(WEEK ,-2 ,ps.AdmittedDate) AS [ReminderDate]
+-- 	, DATEADD(MONTH, 3, ps.DischargeDate) AS [AppointmentDate]
+-- 	, DATEDIFF(DAY ,ps.AdmittedDate ,ps.DischargeDate)  AS [LengthOfStay]
+-- 	, ps.Hospital
+-- 	, ps.Ward
+-- 	, ps.Tariff
+-- FROM
+-- 	PatientStay AS ps
+-- WHERE
+-- 	ps.Hospital IN 	( 'Kingston', 'pruh' )
+-- 	AND ps.Ward LIKE '%surgery'
+-- 	AND ps.AdmittedDate BETWEEN '2024-02-27' AND '2024-03-01'
+-- ORDER BY	
+-- 	ps.AdmittedDate ASC
+-- 	,ps.DischargeDate ASC
+
+-- 2nd Query **********************************
+
+-- Count the total number of rows in PatientStay
+-- SELECT TOP (5)
+-- 	ps.Hospital
+-- 	,ps.Ward
+-- 	,COUNT(*) AS [PatientCount]
+-- 	,SUM(ps.tariff) AS [TotalTariff]
+-- FROM
+-- 	PatientStay AS ps
+-- GROUP BY
+-- 	ps.Hospital 
+-- 	,ps.Ward 
+-- ORDER BY
+-- 	TotalTariff DESC
+-- ps.Hospital DESC
+-- ,ps.Ward DESC
+
+--  3rd Query **********************************
+
+-- SELECT
+-- 	*
+-- 	FROM
+-- 		PatientStay AS ps
+-- 		INNER JOIN DimHospital AS h ON
+-- 			ps.Hospital = h.Hospital --;
+
+-- SELECT * FROM DimHospital--
+
 SELECT
 	ps.PatientId
 	, ps.AdmittedDate
-	, ps.DischargeDate
-	, DATEADD(WEEK ,-2 ,ps.AdmittedDate) AS [ReminderDate]
-	, DATEADD(MONTH, 3, ps.DischargeDate) AS [AppointmentDate]
-	, DATEDIFF(DAY ,ps.AdmittedDate ,ps.DischargeDate)  AS [LengthOfStay]
+	, h.HospitalType
+	, h.Reach
+	, h.HospitalSize
 	, ps.Hospital
-	, ps.Ward
+	, h.Hospital
 FROM
 	PatientStay AS ps
-WHERE
-	ps.Hospital IN 	( 'Kingston', 'pruh' )
-	AND ps.Ward LIKE '%surgery'
-	AND ps.AdmittedDate BETWEEN '2024-02-27' AND '2024-03-01'
-ORDER BY	
-	ps.AdmittedDate ASC
-	,ps.DischargeDate ASC
-	
-
--- ;
-	
+	LEFT JOIN
+	DimHospitalBad AS h
+	ON ps.Hospital = h.Hospital
 
 
-
+	-- ps.PatientId
+	-- , ps.AdmittedDate
 
 /*
 1. Filter the list the patients to show only those  -
